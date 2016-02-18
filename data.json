@@ -5,7 +5,7 @@
             "sources": [
                 {
                     "name": "google",
-                    "id" : "123",
+                    "id": "123",
                     "count": 10,
                     "bydate": [
                         {
@@ -90,7 +90,7 @@
                 },
                 {
                     "name": "organic",
-                    "id" : "124",
+                    "id": "124",
                     "count": 10,
                     "bydate": [
                         {
@@ -109,7 +109,7 @@
                 },
                 {
                     "name": "facebook",
-                    "id" : "125",
+                    "id": "125",
                     "count": 15,
                     "bydate": [
                         {
@@ -128,7 +128,7 @@
                 },
                 {
                     "name": "linkedin",
-                    "id" : "126",
+                    "id": "126",
                     "count": 13,
                     "bydate": [
                         {
@@ -203,7 +203,7 @@
                 },
                 {
                     "name": "facebook",
-                    "count": 2,
+                    "count": 1,
                     "bydate": [
                         {
                             "data": "1/1/2016",
