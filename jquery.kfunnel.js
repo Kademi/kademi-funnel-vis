@@ -10,9 +10,7 @@
             stageNameFontSize: "18px",
             stageNameFontFamily: "sans-serif",
             stageNameFontColor: "white",
-            stageNameFontPadding: "3px",
             stageNameBackgroundColor: "black",
-            stageNameBackgroundOpacity: 0.8,
             legendNameFontSize: "20px",
             legendNameFontFamily: "sans-serif",
             legendNameFontColor: "black",
@@ -26,7 +24,9 @@
             height: 500,
             url: 'data.json',
             onBubbleClick: function () {
-            }
+            },
+            onGroupClick: function () {
+            },
         }, options);
 
         var width = setting.width;
@@ -121,14 +121,20 @@
                 var id_codes = {};
                 for (var i = 0; i < json.stages[0].sources.length; i++)
                 {
+                    flog("set ID code", json.stages[0].sources[i].name, json.stages[0].sources[i].id);
                     id_codes[json.stages[0].sources[i].name] = json.stages[0].sources[i].id;
                 }
 
                 for (var t = 0; t < size; t++) {
                     for (var i = 0; i < json.stages[t].sources.length; i++)
                     {
-                        data_set.push({"level": t, "name": json.stages[t].sources[i].name, "id": id_codes[json.stages[t].sources[i].name], "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2), "count": json.stages[t].sources[i].count});
-                        name_set.add(json.stages[t].sources[i].name);
+                        var itemName = json.stages[t].sources[i].name;
+                        data_set.push(
+                                {
+                                    "level": t,
+                                    "name": itemName, "id": id_codes[itemName], "radius": Math.sqrt(json.stages[t].sources[i].count / maxCount) * (levelHeight / 2), "count": json.stages[t].sources[i].count}
+                        );
+                        name_set.add(itemName);
                     }
                 }
 
@@ -196,8 +202,10 @@
                             .data([{"id": id_codes[value]}])
                             //.enter()
                             .on('click', function (d) {
-                                if (typeof setting.onBubbleClick === 'function') {
-                                    setting.onBubbleClick.call(this, d);
+                                if (typeof setting.onGroupClick === 'function') {
+                                    var id = id_codes[value];
+                                    //flog("onGroupClick1", value, id, id_codes);
+                                    setting.onGroupClick.call(this, {id: id, name: value});
                                 }
                             });
                     counter++;
@@ -355,7 +363,7 @@
                         })
                         .on('click', function (d) {
                             if (typeof setting.onBubbleClick === 'function') {
-                                setting.onBubbleClick.call(this, d);
+                                setting.onBubbleClick.call(this, d, json.stages[d.level]);
                             }
                         })
                         .on("mousemove", function (d) {
@@ -434,7 +442,7 @@
 
                 for (var t = 0; t < size; t++)
                 {
-                    var padding = parseInt(setting.stageNameFontPadding);
+
                     var text = svg.append("text")
                             .attr("font-size", setting.stageNameFontSize)
                             .attr("font-family", setting.stageNameFontFamily)
@@ -445,22 +453,21 @@
                     console.log(bbox);
 
                     svg.append("rect")
-                            .attr("x", adjustTopWidth / 2 - bbox.width / 2 - padding)
+                            .attr("x", adjustTopWidth / 2 - bbox.width / 2 - 4)
                             .attr("y", t * totalHeight / size)
-                            .attr("width", bbox.width + 2 * padding)
-                            .attr("height", (bbox.height + 2 * padding))
-                            .attr("fill", setting.stageNameBackgroundColor)
-                            .attr("opacity", setting.stageNameBackgroundOpacity);
+                            .attr("width", bbox.width + 8)
+                            .attr("height", bbox.height * 1.5)
+                            .attr("fill", setting.stageNameBackgroundColor);
 
                     text.attr("x", adjustTopWidth / 2 - bbox.width / 2)
-                            .attr("y", t * totalHeight / size + bbox.height / 2 + padding + 5);
+                            .attr("y", t * totalHeight / size + bbox.height);
 
                     svg.append("text")
                             .attr("font-size", setting.stageNameFontSize)
                             .attr("font-family", setting.stageNameFontFamily)
                             .attr("fill", setting.stageNameFontColor)
                             .attr("x", adjustTopWidth / 2 - bbox.width / 2)
-                            .attr("y", t * totalHeight / size + bbox.height / 2 + padding + 5)
+                            .attr("y", t * totalHeight / size + bbox.height)
                             .text(json.stages[t].name);
                 }
             }
