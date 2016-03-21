@@ -370,7 +370,7 @@
                             if (i % stride === 0) {
                                 svg.append("text")
                                     .style("fill", setting.histogramLabelFontColor)
-                                    .attr("x", base_x + + setting.marginLeft)
+                                    .attr("x", base_x + setting.marginLeft)
                                     .attr("y", base_y)
                                     .attr("font-size", setting.histogramLabelFontSize)
                                     .attr("font-family", setting.histogramLabelFontFamily)
@@ -383,7 +383,7 @@
                         for (var j = 0; j < chart_data.leads[i].length; j++) {
                             var l = chart_data.leads[i][j] * chart_height / max_leadsum;
                             svg.append("rect")
-                                .attr("x", base_x + + setting.marginLeft)
+                                .attr("x", base_x + setting.marginLeft)
                                 .attr("y", base_y - l)
                                 .attr("width", chart_div - 1)
                                 .attr("height", l)
