@@ -46,8 +46,13 @@
                 .attr("width", 2 * width)
                 .attr("height", 2 * height);
             var svg_pos = $(svg[0]).position();
-						var svgContainers = $(n.parentElement).closest('.row').find('.svg-container');
-						var svgStages = $(n.parentElement).closest('.row').find('#funnelStages').find('.svg-container');
+
+						/* Detect frame width */
+						if($('#kfvWrapper').width() > 768) {
+							$('.kfv-container').removeClass('kfv-tablet').addClass('kfv-desktop')
+						} else {
+							$('.kfv-container').removeClass('kfv-desktop').addClass('kfv-tablet');
+						}
 
             $(n.parentElement).find('div').remove();
 
@@ -263,7 +268,16 @@
 
                 var counter = 0;
                 name_set.forEach(function (value) {
-										var svgStage = d3.select('#' + $(svgStages.get(counter)).find('svg').attr('id')).attr('width', 120).attr('height', 30);
+										var svgElem,
+												svgElemId = 'funnelStage' + counter;
+
+										svgElem = [
+											'<div class="kfv-svg-container kfv-svg-stage">',
+											'<svg id="' + svgElemId + '" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',	
+											'</div>'
+										].join('');
+										$('#funnelStages').append(svgElem);
+										var svgStage = d3.select('#' + svgElemId).attr('width', 120).attr('height', 30);
 
 										svgStage.append("rect")
 											.attr("x", 0)
