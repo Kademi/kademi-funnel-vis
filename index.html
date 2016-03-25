@@ -2,19 +2,102 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<style>
+						.row:before,
+						.row:after {
+								content: "";
+								display: table;		
+						}
+						.row:after {
+								clear: both;
+						}
+						.col {
+								float: left;
+						}
+						.svg-container { 
+								display: block;
+								position: relative;
+								vertical-align: middle; 
+						}
+						.svg-content { 
+								display: inline-block;
+						}
+						@media only screen and (min-width : 480px) {
+							.svg-container {
+								display: inline-block;
+							}
+							.col-left,
+						  .col-right {
+								width: 100%;
+							}
+							#funnelStages {
+								margin: 20px 0 40px 0;
+							}
+							#funnelLead {
+								margin-right: 10px;
+							}
+
+						}
+						@media only screen and (min-width : 992px) {
+							.svg-container {
+								display: block;
+							}
+							.svg-stage {
+								margin-top: 10px;
+							}
+							.col-left {
+								width: 40%;
+							}
+							.col-right {
+								width: 60%;
+							}
+							#funnelLead {
+								margin-bottom: 10px;
+							}
+						}
+				</style>
     </head>
     <body>
         <div class="container container-lg p-lg">
             <h1>Funnel Analytics</h1>
-            <svg id="funnel"></svg>
+						<div class="row">
+							<div class="col col-left">
+								<div class="svg-container">
+									<svg id="funnelLead" preserveAspectRatio="xMinYMin meet" class="svg-content"></svg>
+								</div>
+								<div class="svg-container">
+									<svg id="funnelDealTotal" preserveAspectRatio="xMinYMin meet" class="svg-content"></svg>
+								</div>
+								<div id="funnelStages">
+									<div class="svg-container svg-stage">
+										<svg id="funnelStageGoogle" preserveAspectRatio="xMinYMin meet" class="svg-content"></svg>
+									</div>
+									<div class="svg-container svg-stage">
+										<svg id="funnelStageOrganic" preserveAspectRatio="xMinYMin meet" class="svg-content"></svg>
+									</div>
+									<div class="svg-container svg-stage">
+										<svg id="funnelStageFacebook" preserveAspectRatio="xMinYMin meet" class="svg-content"></svg>
+									</div>
+									<div class="svg-container svg-stage">
+										<svg id="funnelStageLinkedin" preserveAspectRatio="xMinYMin meet" class="svg-content"></svg>
+									</div>
+								</div>
+							</div>
+							<div class="col col-right">
+								<div class="svg-container">
+									<svg id="funnelRight" preserveAspectRatio="xMinYMin meet" class="svg-content"></svg>
+								</div>
+							</div>
+						</div>
         </div>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
-        <script src="jquery.kfunnel.js"></script>
+        <script src="jquery.kfunnel.modified.js"></script>
         <script type="text/javascript">
-            function initFunnel() {
-                $("div #funnel").funnel({
+                $("#funnelRight").funnel({
+										marginLeft: 0,
                     stageNameFontPadding: "10px",
                     stageNameBackgroundOpacity: 0.6,
                     onBubbleClick: function (d) {
@@ -22,9 +105,6 @@
                         console.log([t, d.id]);
                     }
                 });
-            }
-            
-            initFunnel();
         </script>
     </body>
 </html>
