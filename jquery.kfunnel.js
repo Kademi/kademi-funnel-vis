@@ -40,17 +40,47 @@
 
         var levelHeight = parseInt(setting.stageHeight) / 2;
 
-        return this.each(function (i, n) {
-            var elem = $(n);
+        return this.each(function (i, el) {
+            var elem = $(el);
+						var svgHtmlStructure = [
+							'<div class="kfv-container container-lg p-lg">',
+							'<h1>Funnel Analytics</h1>',
+							'<div class="kfv-row">',
+							
+							'<div class="kfv-col kfv-col-left">',		
+							'<div class="kfv-svg-container">',
+							'<svg id="funnelLead" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
+							'</div>',
+							'<div class="kfv-svg-container">',
+							'<svg id="funnelDealTotal" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
+							'</div>',
+							'<div id="funnelStages"></div>',
+							'</div>',
+
+							'<div class="kfv-col kfv-col-right">',		
+							'<div class="kfv-svg-container">',
+							'<svg id="funnelRight" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
+							'</div>',
+							'</div>',
+
+							'</div>',
+							'</div>'
+						].join('');
+						elem.append(svgHtmlStructure);
+
+						/* Detect frame width */
+						if($('#kfvWrapper').width() > 768) {
+							$('.kfv-container').removeClass('kfv-tablet').addClass('kfv-desktop')
+						} else {
+							$('.kfv-container').removeClass('kfv-desktop').addClass('kfv-tablet');
+						}
+						
+						var n = '#funnelRight';
             var svg = d3.select(n)
                 .attr("width", 2 * width)
                 .attr("height", 2 * height);
-
             var svg_pos = $(svg[0]).position();
-
-            $(n.parentElement).find('div').remove();
-
-            var tooltip = d3.select(n.parentElement)
+            var tooltip = d3.select(document.getElementById('funnelRight').parentElement)
                 .append("div")
                 .style("position", "absolute")
                 .style("text-align", "left")
@@ -73,7 +103,6 @@
             });
 
             function handleDataReceived(resp) {
-                elem.empty();
                 var json = resp;
                 var size = json.stages.length;
                 var totalHeight = size * levelHeight * 2;
@@ -139,7 +168,6 @@
                 for (var t = 0; t < size; t++) {
                     for (var i = 0; i < json.stages[t].sources.length; i++) {
                         var itemName = json.stages[t].sources[i].name;
-                        //flog("item id - ", id_codes[itemName]);
                         data_set.push(
                             {
                                 "level": t,
@@ -196,54 +224,58 @@
                         })
                     }
                 });
-                svg.append("rect")
-                    .attr("x", 15)
-                    .attr("y", 50)
+
+								/* Svg Lead */
+								var svgLead = d3.select('#funnelLead').attr('width', 220).attr('height', 80);
+                svgLead.append("rect")
+                    .attr("x", 0)
+                    .attr("y", 0)
                     .attr("width", 220)
                     .attr("height", 80)
                     .attr("fill", setting.funnelBackgroundColor)
                     .attr("stroke", "gray")
                     .attr("stroke-width", 0);
-                svg.append("text")
+                svgLead.append("text")
                     .style("fill", setting.leadLegendColor)
-                    .attr("x", 40)
-                    .attr("y", 85)
+                    .attr("x", 35)
+                    .attr("y", 35)
                     .attr("font-size", setting.leadLegendFontSize)
                     .attr("font-family", setting.leadLegendFontFamily)
                     .text("Leads");
-                svg.append("text")
+                svgLead.append("text")
                     .style("fill", setting.leadLegendColor)
-                    .attr("x", 40)
-                    .attr("y", 113)
+                    .attr("x", 35)
+                    .attr("y", 63)
                     .attr("font-size", setting.leadLegendValueFontSize)
                     .attr("font-family", setting.leadLegendValueFontFamily)
                     .text(totalLeads);
 
-                // deal total
-                svg.append("rect")
-                    .attr("x", 15)
-                    .attr("y", 140)
+								/* Svg Deal */
+								var svgDeal = d3.select('#funnelDealTotal').attr('width', 220).attr('height', 80);
+                svgDeal.append("rect")
+                    .attr("x", 0)
+                    .attr("y", 0)
                     .attr("width", 220)
                     .attr("height", 80)
                     .attr("fill", setting.funnelBackgroundColor)
                     .attr("stroke", "gray")
                     .attr("stroke-width", 0);
-                svg.append("text")
+                svgDeal.append("text")
                     .style("fill", setting.leadLegendColor)
-                    .attr("x", 40)
-                    .attr("y", 170)
+                    .attr("x", 25)
+                    .attr("y", 30)
                     .attr("font-size", setting.leadLegendFontSize)
                     .attr("font-family", setting.leadLegendFontFamily)
                     .text("Deal Total");
-                svg.append("text")
+                svgDeal.append("text")
                     .style("fill", setting.leadLegendColor)
-                    .attr("x", 40)
-                    .attr("y", 200)
+                    .attr("x", 25)
+                    .attr("y", 60)
                     .attr("font-size", setting.leadLegendValueFontSize)
                     .attr("font-family", setting.leadLegendValueFontFamily)
                     .text('$'+resp.dealTotal);
 
-
+/*
                 // left stage labels
                 svg.append("rect")
                     .attr("x", 30)
@@ -254,22 +286,44 @@
                     .attr("stroke", "gray")
                     .attr("stroke-width", 0);
                 //.style("filter", "url(#drop-shadow)");
+*/
 
                 var counter = 0;
                 name_set.forEach(function (value) {
+										var svgElem,
+												svgElemId = 'funnelStage' + counter;
+
+										svgElem = [
+											'<div class="kfv-svg-container kfv-svg-stage">',
+											'<svg id="' + svgElemId + '" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',	
+											'</div>'
+										].join('');
+										$('#funnelStages').append(svgElem);
+										var svgStage = d3.select('#' + svgElemId).attr('width', 120).attr('height', 30);
+
+										svgStage.append("rect")
+											.attr("x", 0)
+											.attr("y", 0)
+											.attr("width", 120)
+											.attr("height", 30)
+											.attr("fill", "white")
+											.attr("stroke", "gray")
+											.attr("stroke-width", 0);
+
                     // Stage label
-                    svg.append("text")
+                    svgStage.append("text")
                         .style("fill", "black")
-                        .attr("x", 70)
-                        .attr("y", (counter + 1) * 50 + 4 + 240)
+                        .attr("x", 30)
+                        // .attr("y", (counter + 1) * 50 + 4 + 240)
+                        .attr("y", 20)
                         .attr("font-size", setting.legendNameFontSize)
                         .attr("font-family", setting.legendNameFontFamily)
                         .attr("fill", setting.legendNameFontColor)
                         .text(value);
                     // Stage color ellipse
-                    svg.append("ellipse")
-                        .attr("cx", 40)
-                        .attr("cy", (counter + 1) * 50 + 240)
+                    svgStage.append("ellipse")
+                        .attr("cx", 15)
+                        .attr("cy", 15)
                         .attr("rx", 10)
                         .attr("ry", 10)
                         .attr("fill", stringToColorCode(value))
@@ -287,8 +341,11 @@
                 });
 
 
+								/* Svg Funnel Right */
+								var svgFunnelRight = d3.select('#funnelRight').attr('width', 500).attr('height', 600);
+								var svg_pos = $(svgFunnelRight[0]).position();
                 for (var t = 0; t < size; t++) {
-                    var gradient = svg.append("defs")
+                    var gradient = svgFunnelRight.append("defs")
                         .append("linearGradient")
                         .attr("id", "gradient")
                         .attr("x1", "10%")
@@ -310,7 +367,7 @@
                         [trapBox.right(t * totalHeight / size) + setting.marginLeft, t * totalHeight / size],
                         [trapBox.right((t + 1) * totalHeight / size) + setting.marginLeft, (t + 1) * totalHeight / size],
                         [trapBox.left((t + 1) * totalHeight / size) + setting.marginLeft, (t + 1) * totalHeight / size]]);
-                    var polygon = svg.append("g")
+                    var polygon = svgFunnelRight.append("g")
                         .attr("class", "polygon")
                         .datum(trap.p);
                     if (t === size - 1) {
@@ -357,7 +414,7 @@
                         if (i === chart_data.leads.length - 1) {
                             if (stride < 2) {
                                 if (i % stride === 0) {
-                                    svg.append("text")
+                                    svgFunnelRight.append("text")
                                         .style("fill", setting.histogramLabelFontColor)
                                         .attr("x", base_x + 5 + setting.marginLeft)
                                         .attr("y", base_y)
@@ -368,7 +425,7 @@
                             }
                         } else {
                             if (i % stride === 0) {
-                                svg.append("text")
+                                svgFunnelRight.append("text")
                                     .style("fill", setting.histogramLabelFontColor)
                                     .attr("x", base_x + setting.marginLeft)
                                     .attr("y", base_y)
@@ -382,13 +439,13 @@
 
                         for (var j = 0; j < chart_data.leads[i].length; j++) {
                             var l = chart_data.leads[i][j] * chart_height / max_leadsum;
-                            svg.append("rect")
+                            svgFunnelRight.append("rect")
                                 .attr("x", base_x + setting.marginLeft)
                                 .attr("y", base_y - l)
                                 .attr("width", chart_div - 1)
                                 .attr("height", l)
                                 .attr("fill", stringToColorCode(chart_data.names[j]))
-                                .append("svg:title")
+                                .append("svgFunnelRight:title")
                                 .text(function () {
                                     info = "";
                                     info += "date: " + getDateStr(chart_data.dates[i]) + "\n";
@@ -404,15 +461,15 @@
                     }
                 }
 
-                //svg.append("text").attr("x", 1100).attr("y", 200).attr("font-size", "20px").attr("font-family", "sans-serif").text("99/99/9999");
-                //svg.append("rect").attr("x", 1100).attr("y", 200).attr("width", 100).attr("height", 20);
+                //svgFunnelRight.append("text").attr("x", 1100).attr("y", 200).attr("font-size", "20px").attr("font-family", "sans-serif").text("99/99/9999");
+                //svgFunnelRight.append("rect").attr("x", 1100).attr("y", 200).attr("width", 100).attr("height", 20);
 
                 var force = d3.layout.force()
                     .size([width, height]);
 
-                var node = svg.selectAll("circle")
+                var node = svgFunnelRight.selectAll("circle")
                     .data(data_set)
-                    .enter().append("svg:circle")
+                    .enter().append("svgFunnelRight:circle")
                     .attr("r", function (d) {
                         return d.radius;
                     })
@@ -506,16 +563,15 @@
 
                 for (var t = 0; t < size; t++) {
 
-                    var text = svg.append("text")
+                    var text = svgFunnelRight.append("text")
                         .attr("font-size", setting.stageNameFontSize)
                         .attr("font-family", setting.stageNameFontFamily)
                         .attr("fill", setting.stageNameFontColor)
                         .text(json.stages[t].name);
                     var bbox = text[0][0].getBBox();
                     var ctm = text[0][0].getCTM();
-                    console.log(bbox);
 
-                    //svg.append("rect")
+                    //svgFunnelRight.append("rect")
                     //        .attr("x", adjustTopWidth / 2 - bbox.width / 2 - 4)
                     //        .attr("y", t * totalHeight / size)
                     //        .attr("width", bbox.width + 8)
@@ -527,7 +583,7 @@
                         [trapBox.right(t * totalHeight / size) + setting.marginLeft, t * totalHeight / size],
                         [trapBox.right((t + 0.2) * totalHeight / size) + setting.marginLeft, (t + 0.2) * totalHeight / size],
                         [trapBox.left((t + 0.2) * totalHeight / size) + setting.marginLeft, (t + 0.2) * totalHeight / size]]);
-                    var polygon = svg.append("g")
+                    var polygon = svgFunnelRight.append("g")
                         .attr("class", "polygon")
                         .attr('fill', "#3e3e3e")
                         .datum(trap.p);
@@ -542,7 +598,7 @@
                     //    .attr("y", t * totalHeight / size + bbox.height);
                     text.remove();
 
-                    svg.append("text")
+                    svgFunnelRight.append("text")
                         .attr("font-size", setting.stageNameFontSize)
                         .attr("font-family", setting.stageNameFontFamily)
                         .attr("fill", setting.stageNameFontColor)

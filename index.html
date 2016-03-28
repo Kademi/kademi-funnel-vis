@@ -6,33 +6,13 @@
 				<link rel="stylesheet" type="text/css" href="main.css">
     </head>
     <body>
-				<div id="kfvWrapper">
-					<div class="kfv-container container-lg p-lg">
-							<h1>Funnel Analytics</h1>
-							<div class="kfv-row">
-								<div class="kfv-col kfv-col-left">
-									<div class="kfv-svg-container">
-										<svg id="funnelLead" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>
-									</div>
-									<div class="kfv-svg-container">
-										<svg id="funnelDealTotal" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>
-									</div>
-									<div id="funnelStages"></div>
-								</div>
-								<div class="kfv-col kfv-col-right">
-									<div class="kfv-svg-container">
-										<svg id="funnelRight" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>
-									</div>
-								</div>
-							</div>
-					</div>
-				</div>
+				<div id="kfvWrapper"></div>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
-        <script src="jquery.kfunnel.modified.js"></script>
+        <script src="jquery.kfunnel.js"></script>
         <script type="text/javascript">
-                $("#funnelRight").funnel({
+                $("#kfvWrapper").funnel({
 										marginLeft: 0,
                     stageNameFontPadding: "10px",
                     stageNameBackgroundOpacity: 0.6,
