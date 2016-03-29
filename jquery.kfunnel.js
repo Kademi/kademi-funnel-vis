@@ -42,40 +42,38 @@
 
         return this.each(function (i, el) {
             var elem = $(el);
-						var svgHtmlStructure = [
-							'<div class="kfv-container container-lg p-lg">',
-							'<h1>Funnel Analytics</h1>',
-							'<div class="kfv-row">',
-							
-							'<div class="kfv-col kfv-col-left">',		
-							'<div class="kfv-svg-container">',
-							'<svg id="funnelLead" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
-							'</div>',
-							'<div class="kfv-svg-container">',
-							'<svg id="funnelDealTotal" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
-							'</div>',
-							'<div id="funnelStages"></div>',
-							'</div>',
+            var svgHtmlStructure = [
+                '<div class="kfv-container container-lg p-lg">',
+                '<div class="kfv-row">',
+                '<div class="kfv-col kfv-col-left">',
+                '<div class="kfv-svg-container">',
+                '<svg id="funnelLead" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
+                '</div>',
+                '<div class="kfv-svg-container">',
+                '<svg id="funnelDealTotal" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
+                '</div>',
+                '<div id="funnelStages"></div>',
+                '</div>',
 
-							'<div class="kfv-col kfv-col-right">',		
-							'<div class="kfv-svg-container">',
-							'<svg id="funnelRight" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
-							'</div>',
-							'</div>',
+                '<div class="kfv-col kfv-col-right">',
+                '<div class="kfv-svg-container">',
+                '<svg id="funnelRight" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
+                '</div>',
+                '</div>',
 
-							'</div>',
-							'</div>'
-						].join('');
-						elem.append(svgHtmlStructure);
+                '</div>',
+                '</div>'
+            ].join('');
+            elem.append(svgHtmlStructure);
 
-						/* Detect frame width */
-						if($('#kfvWrapper').width() > 768) {
-							$('.kfv-container').removeClass('kfv-tablet').addClass('kfv-desktop')
-						} else {
-							$('.kfv-container').removeClass('kfv-desktop').addClass('kfv-tablet');
-						}
-						
-						var n = '#funnelRight';
+            /* Detect frame width */
+            if ($('#kfvWrapper').width() > 768) {
+                $('.kfv-container').removeClass('kfv-tablet').addClass('kfv-desktop')
+            } else {
+                $('.kfv-container').removeClass('kfv-desktop').addClass('kfv-tablet');
+            }
+
+            var n = '#funnelRight';
             var svg = d3.select(n)
                 .attr("width", 2 * width)
                 .attr("height", 2 * height);
@@ -217,16 +215,16 @@
 
                 // leads count
                 var totalLeads = 0;
-                resp.stages.forEach(function(item){
-                    if(item.sources && item.sources.length){
-                        item.sources.forEach(function(itm){
-                            totalLeads+=itm.count;
+                resp.stages.forEach(function (item) {
+                    if (item.sources && item.sources.length) {
+                        item.sources.forEach(function (itm) {
+                            totalLeads += itm.count;
                         })
                     }
                 });
 
-								/* Svg Lead */
-								var svgLead = d3.select('#funnelLead').attr('width', 220).attr('height', 80);
+                /* Svg Lead */
+                var svgLead = d3.select('#funnelLead').attr('width', 220).attr('height', 80);
                 svgLead.append("rect")
                     .attr("x", 0)
                     .attr("y", 0)
@@ -250,8 +248,8 @@
                     .attr("font-family", setting.leadLegendValueFontFamily)
                     .text(totalLeads);
 
-								/* Svg Deal */
-								var svgDeal = d3.select('#funnelDealTotal').attr('width', 220).attr('height', 80);
+                /* Svg Deal */
+                var svgDeal = d3.select('#funnelDealTotal').attr('width', 220).attr('height', 80);
                 svgDeal.append("rect")
                     .attr("x", 0)
                     .attr("y", 0)
@@ -273,61 +271,55 @@
                     .attr("y", 60)
                     .attr("font-size", setting.leadLegendValueFontSize)
                     .attr("font-family", setting.leadLegendValueFontFamily)
-                    .text('$'+resp.dealTotal);
+                    .text('$' + resp.dealTotal);
 
-/*
-                // left stage labels
-                svg.append("rect")
-                    .attr("x", 30)
-                    .attr("y", 240)
-                    .attr("width", 250)
-                    .attr("height", name_set.length * 60)
-                    .attr("fill", "white")
-                    .attr("stroke", "gray")
-                    .attr("stroke-width", 0);
-                //.style("filter", "url(#drop-shadow)");
-*/
+                /*
+                 // left stage labels
+                 svg.append("rect")
+                 .attr("x", 30)
+                 .attr("y", 240)
+                 .attr("width", 250)
+                 .attr("height", name_set.length * 60)
+                 .attr("fill", "white")
+                 .attr("stroke", "gray")
+                 .attr("stroke-width", 0);
+                 //.style("filter", "url(#drop-shadow)");
+                 */
 
                 var counter = 0;
                 name_set.forEach(function (value) {
-										var svgElem,
-												svgElemId = 'funnelStage' + counter;
+                    var svgElem,
+                        svgElemId = 'funnelStage' + counter;
 
-										svgElem = [
-											'<div class="kfv-svg-container kfv-svg-stage">',
-											'<svg id="' + svgElemId + '" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',	
-											'</div>'
-										].join('');
-										$('#funnelStages').append(svgElem);
-										var svgStage = d3.select('#' + svgElemId).attr('width', 120).attr('height', 30);
-
-										svgStage.append("rect")
-											.attr("x", 0)
-											.attr("y", 0)
-											.attr("width", 120)
-											.attr("height", 30)
-											.attr("fill", "white")
-											.attr("stroke", "gray")
-											.attr("stroke-width", 0);
+                    svgElem = [
+                        '<div class="kfv-svg-container kfv-svg-stage">',
+                        '<svg id="' + svgElemId + '" preserveAspectRatio="xMinYMin meet" class="kfv-svg-content"></svg>',
+                        '</div>'
+                    ].join('');
+                    $('#funnelStages').append(svgElem);
+                    var svgStage = d3.select('#' + svgElemId).attr('width', 120).attr('height', 30);
 
                     // Stage label
-                    svgStage.append("text")
+                    var svgStageText = svgStage.append("text")
                         .style("fill", "black")
-                        .attr("x", 30)
+                        .attr("x", 40)
                         // .attr("y", (counter + 1) * 50 + 4 + 240)
                         .attr("y", 20)
                         .attr("font-size", setting.legendNameFontSize)
                         .attr("font-family", setting.legendNameFontFamily)
                         .attr("fill", setting.legendNameFontColor)
                         .text(value);
+                    var svgStageTextBBox = svgStageText[0][0].getBBox();
+                    svgStage.attr('width', svgStageTextBBox.width + 50);
+
                     // Stage color ellipse
-                    svgStage.append("ellipse")
-                        .attr("cx", 15)
-                        .attr("cy", 15)
-                        .attr("rx", 10)
-                        .attr("ry", 10)
+                    svgStage.append("rect")
+                        .attr("x", 15)
+                        .attr("y", 7.5)
+                        .attr("width", 15)
+                        .attr("height", 15)
                         .attr("fill", stringToColorCode(value))
-                        .attr("stroke", d3.rgb(stringToColorCode(value)).darker())
+                        .attr("stroke", stringToColorCode(value))
                         .data([{"id": id_codes[value]}])
                         //.enter()
                         .on('click', function (d) {
@@ -341,9 +333,9 @@
                 });
 
 
-								/* Svg Funnel Right */
-								var svgFunnelRight = d3.select('#funnelRight').attr('width', 500).attr('height', 600);
-								var svg_pos = $(svgFunnelRight[0]).position();
+                /* Svg Funnel Right */
+                var svgFunnelRight = d3.select('#funnelRight').attr('width', 500).attr('height', 600);
+                var svg_pos = $(svgFunnelRight[0]).position();
                 for (var t = 0; t < size; t++) {
                     var gradient = svgFunnelRight.append("defs")
                         .append("linearGradient")

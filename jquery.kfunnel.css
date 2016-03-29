@@ -1,0 +1,49 @@
+.kfv-row:before {
+		display: table;
+		content: "";
+}
+.kfv-row:after {
+		clear: both;
+}
+.kfv-col {
+		float: left;
+		padding-left: 15px;
+}
+.kfv-svg-container { 
+		display: block;
+		position: relative;
+		vertical-align: middle; 
+}
+.kfv-svg-content { 
+		display: inline-block;
+}
+ 
+/* Tablet size */
+.kfv-tablet .col-left {
+		width: 30%;
+}
+.kfv-tablet .col-right {
+		width: 70%;
+}
+.kfv-tablet .kfv-svg-container {
+		display: inline-block;
+}
+.kfv-tablet #funnelStages {
+		margin: 20px 0 40px 0;
+}
+.kfv-tablet #funnelLead {
+		margin-right: 10px;
+}
+/* Desktop size */
+.kfv-desktop .col {
+		width: 100%;
+}
+.kfv-desktop .kfv-svg-container {
+		display: block;
+}
+.kfv-desktop .kfv-svg-stage {
+		margin-top: 10px;
+}
+.kfv-desktop #funnelLead {
+		margin-bottom: 10px;
+}

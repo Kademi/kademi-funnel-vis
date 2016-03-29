@@ -151,7 +151,7 @@
             "name": "engagement",
             "sources": [
                 {
-                    "name": "google",
+                    "name": "google search",
                     "count": 8,
                     "bydate": [
                         {
@@ -169,7 +169,7 @@
                     ]
                 },
                 {
-                    "name": "facebook",
+                    "name": "facebook adverting",
                     "count": 7,
                     "bydate": [
                         {
